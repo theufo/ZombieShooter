@@ -6,16 +6,38 @@ using UnityEngine.AI;
 public class Zombie : MonoBehaviour
 {
     Player Player;
-    NavMeshAgent NavMeshAgent;
+    NavMeshAgent navMeshAgent;
+    CapsuleCollider capsuleCollider;
+    Animator animator;
+    MovementAnimator movementAnimator;
+    bool dead;
 
     void Start()
     {
         Player = FindObjectOfType<Player>();
-        NavMeshAgent = GetComponent<NavMeshAgent>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
+        animator = GetComponentInChildren<Animator>();
+        movementAnimator = GetComponentInChildren<MovementAnimator>();
     }
 
     void Update()
     {
-        NavMeshAgent.SetDestination(Player.transform.position);
+        if (dead)
+            return;
+
+        navMeshAgent.SetDestination(Player.transform.position);
+    }
+
+    public void Kill()
+    {
+        if (!dead)
+        {
+            dead = true;
+            Destroy(capsuleCollider);
+            Destroy(movementAnimator);
+            Destroy(navMeshAgent);
+            animator.SetTrigger("died");
+        }
     }
 }
