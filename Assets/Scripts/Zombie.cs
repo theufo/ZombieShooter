@@ -14,11 +14,13 @@ public class Zombie : MonoBehaviour
     MovementAnimator movementAnimator;
     private ParticleSystem particleSystem;
     private DiedEventHandler diedEventHandler;
+    KillsController killsController;
     bool dead;
 
     void Start()
     {
         Player = FindObjectOfType<Player>();
+        killsController = FindObjectOfType<KillsController>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponentInChildren<Animator>();
@@ -26,7 +28,6 @@ public class Zombie : MonoBehaviour
         particleSystem = GetComponentInChildren<ParticleSystem>();
         diedEventHandler = GetComponentInChildren<DiedEventHandler>();
         diedEventHandler.Died += DestroyGameObject;
-
     }
 
     void Update()
@@ -41,6 +42,7 @@ public class Zombie : MonoBehaviour
     {
         if (!dead)
         {
+            killsController.AddKill();
             dead = true;
             particleSystem.Play();
             Destroy(capsuleCollider);
