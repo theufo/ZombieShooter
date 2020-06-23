@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                to = from = direction * 100;
+                to = from + direction * 100;
             }
 
             shot.Show(from, to);

@@ -14,7 +14,6 @@ public class MovementAnimator : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         animator.SetFloat("speed", navMeshAgent.velocity.magnitude);

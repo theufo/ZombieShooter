@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,6 +12,8 @@ public class Zombie : MonoBehaviour
     CapsuleCollider capsuleCollider;
     Animator animator;
     MovementAnimator movementAnimator;
+    private ParticleSystem particleSystem;
+    private DiedEventHandler diedEventHandler;
     bool dead;
 
     void Start()
@@ -19,6 +23,10 @@ public class Zombie : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponentInChildren<Animator>();
         movementAnimator = GetComponentInChildren<MovementAnimator>();
+        particleSystem = GetComponentInChildren<ParticleSystem>();
+        diedEventHandler = GetComponentInChildren<DiedEventHandler>();
+        diedEventHandler.Died += DestroyGameObject;
+
     }
 
     void Update()
@@ -34,10 +42,16 @@ public class Zombie : MonoBehaviour
         if (!dead)
         {
             dead = true;
+            particleSystem.Play();
             Destroy(capsuleCollider);
             Destroy(movementAnimator);
             Destroy(navMeshAgent);
             animator.SetTrigger("died");
         }
+    }
+
+    private void DestroyGameObject()
+    {
+        Destroy(gameObject);
     }
 }
