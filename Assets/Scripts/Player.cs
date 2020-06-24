@@ -16,10 +16,12 @@ public class Player : MonoBehaviour
     private HealthBarController healthBarController;
     public float Health = 100;
     public float MaxHealth = 100;
+    GameStateController gameStateController;
 
     void Start()
     {
         cursor = FindObjectOfType<Cursor>();
+        gameStateController = FindObjectOfType<GameStateController>();
         shot = FindObjectOfType<Shot>();
         healthBarController = FindObjectOfType<HealthBarController>();
         capsuleCollider = GetComponent<CapsuleCollider>();
@@ -75,7 +77,7 @@ public class Player : MonoBehaviour
         healthBarController.SetHealth(Health/MaxHealth);
         if (Health <= 0)
         {
-            SceneManager.LoadScene("GameScene");
+            gameStateController.LoseGame();
         }
     }
 }

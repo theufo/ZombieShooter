@@ -12,13 +12,13 @@ namespace Assets.Scripts
         MovementAnimator movementAnimator;
         private ParticleSystem particleSystem;
         private DiedEventHandler diedEventHandler;
-        KillsController killsController;
+        GameStateController gameStateController;
         bool dead;
 
         void Start()
         {
             Player = FindObjectOfType<Player>();
-            killsController = FindObjectOfType<KillsController>();
+            gameStateController = FindObjectOfType<GameStateController>();
             navMeshAgent = GetComponent<NavMeshAgent>();
             capsuleCollider = GetComponent<CapsuleCollider>();
             animator = GetComponentInChildren<Animator>();
@@ -40,7 +40,7 @@ namespace Assets.Scripts
         {
             if (!dead)
             {
-                killsController.AddKill();
+                gameStateController.AddKill();
                 dead = true;
                 particleSystem.Play();
                 Destroy(capsuleCollider);
