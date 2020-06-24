@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public int TotalEnemiesToSpawn = 1;
+    private int spawnedEnemiesCount;
     public float Period;
     public GameObject Enemy;
     public float TimeUntilNextSpawn;
@@ -13,14 +15,17 @@ public class EnemySpawner : MonoBehaviour
         TimeUntilNextSpawn = Random.Range(0, Period);
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (TotalEnemiesToSpawn <= spawnedEnemiesCount)
+            return;
+
         TimeUntilNextSpawn = TimeUntilNextSpawn - Time.deltaTime;
         if(TimeUntilNextSpawn <= 0)
         {
             TimeUntilNextSpawn = Period;
             Instantiate(Enemy, transform.position, transform.rotation);
+            spawnedEnemiesCount++;
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -10,12 +12,16 @@ public class Player : MonoBehaviour
     NavMeshAgent navMeshAgent;
     public float MoveSpeed;
     public Transform GunBarrel;
-    public CapsuleCollider capsuleCollider;
+    CapsuleCollider capsuleCollider;
+    private HealthBarController healthBarController;
+    public float Health = 100;
+    public float MaxHealth = 100;
 
     void Start()
     {
         cursor = FindObjectOfType<Cursor>();
         shot = FindObjectOfType<Shot>();
+        healthBarController = FindObjectOfType<HealthBarController>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.updateRotation = false;
@@ -60,6 +66,16 @@ public class Player : MonoBehaviour
             }
 
             shot.Show(from, to);
+        }
+    }
+
+    public void DoDamage(float value)
+    {
+        Health -= value;
+        healthBarController.SetHealth(Health/MaxHealth);
+        if (Health <= 0)
+        {
+            SceneManager.LoadScene("GameScene");
         }
     }
 }

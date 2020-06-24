@@ -1,59 +1,33 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Assets.Scripts;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class Zombie : MonoBehaviour
+public class Zombie : Enemy, IEnemyStats
 {
-    Player Player;
-    NavMeshAgent navMeshAgent;
-    CapsuleCollider capsuleCollider;
-    Animator animator;
-    MovementAnimator movementAnimator;
-    private ParticleSystem particleSystem;
-    private DiedEventHandler diedEventHandler;
-    KillsController killsController;
-    bool dead;
+    public int MaxHealth { get; set; } = 20;
+    public int CurrentHealth { get; set; }
+    public float Damage { get; set; } = 10;
 
-    void Start()
+    private float _timeBetweenMeleeDamage = 1;
+    private float _nextHit;
+
+    public void OnTriggerEnter(Collider other)
     {
-        Player = FindObjectOfType<Player>();
-        killsController = FindObjectOfType<KillsController>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
-        capsuleCollider = GetComponent<CapsuleCollider>();
-        animator = GetComponentInChildren<Animator>();
-        movementAnimator = GetComponentInChildren<MovementAnimator>();
-        particleSystem = GetComponentInChildren<ParticleSystem>();
-        diedEventHandler = GetComponentInChildren<DiedEventHandler>();
-        diedEventHandler.Died += DestroyGameObject;
-    }
-
-    void Update()
-    {
-        if (dead)
-            return;
-
-        navMeshAgent.SetDestination(Player.transform.position);
-    }
-
-    public void Kill()
-    {
-        if (!dead)
+        if (other.CompareTag("Player"))
         {
-            killsController.AddKill();
-            dead = true;
-            particleSystem.Play();
-            Destroy(capsuleCollider);
-            Destroy(movementAnimator);
-            Destroy(navMeshAgent);
-            animator.SetTrigger("died");
+            _nextHit = Time.time + _timeBetweenMeleeDamage;
+            Player.DoDamage(Damage);
         }
     }
 
-    private void DestroyGameObject()
+    public void OnTriggerStay(Collider other)
     {
-        Destroy(gameObject);
+        if (other.CompareTag("Player"))
+        {
+            if (Time.time < _nextHit)
+                return;
+
+            _nextHit = Time.time + _timeBetweenMeleeDamage;
+            Player.DoDamage(Damage);
+        }
     }
 }
