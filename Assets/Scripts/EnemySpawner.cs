@@ -4,28 +4,53 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public int TotalEnemiesToSpawn = 1;
-    private int spawnedEnemiesCount;
+    public int TotalEnemiesToSpawn = 10;
+    private int _spawnedEnemiesCount;
     public float Period;
     public GameObject Enemy;
-    public float TimeUntilNextSpawn;
+    private float _timeUntilNextSpawn;
+    private bool _started;
     
     void Start()
     {
-        TimeUntilNextSpawn = Random.Range(0, Period);
+        _timeUntilNextSpawn = Random.Range(0, Period);
+    }
+
+    public void Construct(float period, GameObject enemy)
+    {
+        Period = period;
+        Enemy = enemy;
     }
 
     void Update()
     {
-        if (TotalEnemiesToSpawn <= spawnedEnemiesCount)
+        if (!_started)
             return;
 
-        TimeUntilNextSpawn = TimeUntilNextSpawn - Time.deltaTime;
-        if(TimeUntilNextSpawn <= 0)
+        if (TotalEnemiesToSpawn <= _spawnedEnemiesCount)
+            return;
+
+        _timeUntilNextSpawn = _timeUntilNextSpawn - Time.deltaTime;
+        if(_timeUntilNextSpawn <= 0)
         {
-            TimeUntilNextSpawn = Period;
-            Instantiate(Enemy, transform.position, transform.rotation);
-            spawnedEnemiesCount++;
+            _timeUntilNextSpawn = Period;
+            Spawn();
         }
+    }
+
+    public void Spawn()
+    {
+        Instantiate(Enemy, transform.position, transform.rotation);
+        _spawnedEnemiesCount++;
+    }
+
+    public void StartSpawn()
+    {
+        _started = true;
+    }
+
+    public void StopSpawn()
+    {
+        _started = false;
     }
 }

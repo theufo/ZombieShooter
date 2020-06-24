@@ -7,26 +7,26 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    Cursor cursor;
-    Shot shot;
-    NavMeshAgent navMeshAgent;
+    Cursor _cursor;
+    Shot _shot;
+    NavMeshAgent _navMeshAgent;
     public float MoveSpeed;
     public Transform GunBarrel;
-    CapsuleCollider capsuleCollider;
-    private HealthBarController healthBarController;
+    CapsuleCollider _capsuleCollider;
+    private HealthBarController _healthBarController;
     public float Health = 100;
     public float MaxHealth = 100;
-    GameStateController gameStateController;
+    GameStateController _gameStateController;
 
     void Start()
     {
-        cursor = FindObjectOfType<Cursor>();
-        gameStateController = FindObjectOfType<GameStateController>();
-        shot = FindObjectOfType<Shot>();
-        healthBarController = FindObjectOfType<HealthBarController>();
-        capsuleCollider = GetComponent<CapsuleCollider>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
-        navMeshAgent.updateRotation = false;
+        _cursor = FindObjectOfType<Cursor>();
+        _gameStateController = FindObjectOfType<GameStateController>();
+        _shot = FindObjectOfType<Shot>();
+        _healthBarController = FindObjectOfType<HealthBarController>();
+        _capsuleCollider = GetComponent<CapsuleCollider>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _navMeshAgent.updateRotation = false;
     }
 
     void Update()
@@ -40,16 +40,16 @@ public class Player : MonoBehaviour
             dir.x = -1;
         if (Input.GetKey(KeyCode.DownArrow))
             dir.x = 1;
-        navMeshAgent.velocity = dir.normalized*MoveSpeed;
+        _navMeshAgent.velocity = dir.normalized*MoveSpeed;
 
-        var forward = cursor.transform.position - transform.position;
+        var forward = _cursor.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(new Vector3(forward.x, 0, forward.z));
 
         if (Input.GetMouseButtonDown(0))
         {
             var from = GunBarrel.transform.position;
-            var targetHeight = cursor.transform.position.y + capsuleCollider.height / 2;
-            var to = new Vector3(cursor.transform.position.x, targetHeight, cursor.transform.position.z);
+            var targetHeight = _cursor.transform.position.y + _capsuleCollider.height / 2;
+            var to = new Vector3(_cursor.transform.position.x, targetHeight, _cursor.transform.position.z);
             var direction = (to - from).normalized;
 
             RaycastHit hit;
@@ -67,17 +67,17 @@ public class Player : MonoBehaviour
                 to = from + direction * 100;
             }
 
-            shot.Show(from, to);
+            _shot.Show(from, to);
         }
     }
 
     public void DoDamage(float value)
     {
         Health -= value;
-        healthBarController.SetHealth(Health/MaxHealth);
+        _healthBarController.SetHealth(Health/MaxHealth);
         if (Health <= 0)
         {
-            gameStateController.LoseGame();
+            _gameStateController.LoseGame();
         }
     }
 }

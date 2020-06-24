@@ -24,6 +24,7 @@ public class GameStateController : MonoBehaviour
         foreach(var spawner in spawners)
         {
             _enemiesToKill += spawner.TotalEnemiesToSpawn;
+            spawner.StartSpawn();
         }
 
         WinText.gameObject.SetActive(false);
