@@ -1,6 +1,6 @@
 # ZombieShooter
 
-Short game using free assets for characters and level. Crimsonland-like gameplay.
+Short game made in Unity using free assets for characters and level. Crimsonland-like gameplay.
 
 * Animator
 * NavMesh 
