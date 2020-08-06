@@ -8,12 +8,14 @@ namespace Assets.Scripts
         protected Player Player;
         NavMeshAgent navMeshAgent;
         CapsuleCollider capsuleCollider;
+        //BoxCollider capsuleCollider;
         Animator animator;
         MovementAnimator movementAnimator;
         private ParticleSystem particleSystem;
         private DiedEventHandler diedEventHandler;
         GameStateController gameStateController;
         bool dead;
+        public int Health=100;
 
         void Start()
         {
@@ -21,6 +23,7 @@ namespace Assets.Scripts
             gameStateController = FindObjectOfType<GameStateController>();
             navMeshAgent = GetComponent<NavMeshAgent>();
             capsuleCollider = GetComponent<CapsuleCollider>();
+            //capsuleCollider = GetComponent<BoxCollider>();
             animator = GetComponentInChildren<Animator>();
             movementAnimator = GetComponentInChildren<MovementAnimator>();
             particleSystem = GetComponentInChildren<ParticleSystem>();
@@ -34,6 +37,13 @@ namespace Assets.Scripts
                 return;
 
             navMeshAgent.SetDestination(Player.transform.position);
+        }
+
+        public void DoDamage(int damage)
+        {
+            Health -= damage;
+            if (Health <= 0)
+                Kill();
         }
 
         public void Kill()
